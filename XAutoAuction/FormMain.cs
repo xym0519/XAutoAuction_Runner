@@ -26,13 +26,13 @@ public partial class FormMain : Form
     // 全局热键的修饰键和键码
     private const uint MOD_CONTROL = 0x0002; // Ctrl 键
     private const uint MOD_SHIFT = 0x0004; // Shift 键
-    private const uint VK_R = 0x52; // R 键的虚拟键码
+    private const uint VK_E = 0x45; // E 键的虚拟键码
 
     // 注册全局热键的方法
     private void RegisterGlobalHotKey()
     {
         // 将修饰键和键码转换为 Windows API 的参数
-        if (!RegisterHotKey(this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_R))
+        if (!RegisterHotKey(this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_E))
         {
             MessageBox.Show("Failed to register hotkey.");
         }
