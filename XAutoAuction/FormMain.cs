@@ -94,6 +94,7 @@ public partial class FormMain : Form
     private CancellationTokenSource? cancellationTokenSource = null;
     private ManualResetEventSlim resetEvent = new ManualResetEventSlim(true);
     private Thread hotkeyThread;
+    private int round = 0;
 
     private void ToggleStart()
     {
@@ -128,7 +129,20 @@ public partial class FormMain : Form
                                 SetForegroundWindow(mainWindowHandle);
                                 Thread.Sleep(100);
                                 SendKeys.SendWait("\\");
-                                Thread.Sleep(1000);
+                                round++;
+                                if (round >= 60)
+                                {
+                                    Thread.Sleep(300);
+                                    SendKeys.SendWait("w");
+                                    Thread.Sleep(300);
+                                    SendKeys.SendWait("s");
+                                    Thread.Sleep(400);
+                                    round = 0;
+                                }
+                                else
+                                {
+                                    Thread.Sleep(1000);
+                                }
                             }
                         }
                     }
