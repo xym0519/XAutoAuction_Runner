@@ -132,11 +132,15 @@ public partial class FormMain : Form
                                 round++;
                                 if (round >= 60)
                                 {
-                                    Thread.Sleep(300);
+                                    Thread.Sleep(200);
                                     SendKeys.SendWait("w");
-                                    Thread.Sleep(300);
+                                    Thread.Sleep(200);
                                     SendKeys.SendWait("s");
-                                    Thread.Sleep(400);
+                                    Thread.Sleep(200);
+                                    SendKeys.SendWait("{F1}");
+                                    Thread.Sleep(200);
+                                    SendKeys.SendWait("2");
+                                    Thread.Sleep(200);
                                     round = 0;
                                 }
                                 else
