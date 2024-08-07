@@ -34,25 +34,27 @@ partial class FormMain
         // 
         // buttonStart
         // 
-        buttonStart.Location = new Point(12, 12);
+        buttonStart.Location = new Point(8, 7);
+        buttonStart.Margin = new Padding(2, 2, 2, 2);
         buttonStart.Name = "buttonStart";
-        buttonStart.Size = new Size(174, 45);
+        buttonStart.Size = new Size(122, 27);
         buttonStart.TabIndex = 0;
-        buttonStart.Text = "Start";
+        buttonStart.Text = "Compose";
         buttonStart.UseVisualStyleBackColor = true;
         buttonStart.Click += buttonStart_Click;
         // 
         // FormMain
         // 
-        AutoScaleDimensions = new SizeF(10F, 25F);
+        AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(198, 69);
+        ClientSize = new Size(139, 41);
         Controls.Add(buttonStart);
         FormBorderStyle = FormBorderStyle.FixedSingle;
+        Margin = new Padding(2, 2, 2, 2);
         MinimizeBox = false;
         Name = "FormMain";
         ShowIcon = false;
-        Text = "XAA";
+        Text = "Ditto";
         TopMost = true;
         Load += FormMain_Load;
         ResumeLayout(false);

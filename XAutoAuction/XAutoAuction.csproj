@@ -6,6 +6,14 @@
         <Nullable>enable</Nullable>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>Ditto</AssemblyName>
+        <ApplicationIcon>Ditto_128.ico</ApplicationIcon>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\..\..\Applications\Scoop\apps\ditto\current\Ditto.exe">
+        <Link>Ditto.exe</Link>
+      </None>
+    </ItemGroup>
 
 </Project>

@@ -130,7 +130,7 @@ public partial class FormMain : Form
                                 Thread.Sleep(100);
                                 SendKeys.SendWait("\\");
                                 round++;
-                                if (round >= 60)
+                                if (round >= 180)
                                 {
                                     Thread.Sleep(200);
                                     SendKeys.SendWait("w");
