@@ -29,19 +29,29 @@ partial class FormMain
     /// </summary>
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
         buttonStart = new Button();
+        notifyIcon = new NotifyIcon(components);
         SuspendLayout();
         // 
         // buttonStart
         // 
         buttonStart.Location = new Point(8, 7);
-        buttonStart.Margin = new Padding(2, 2, 2, 2);
+        buttonStart.Margin = new Padding(2);
         buttonStart.Name = "buttonStart";
         buttonStart.Size = new Size(122, 27);
         buttonStart.TabIndex = 0;
         buttonStart.Text = "Compose";
         buttonStart.UseVisualStyleBackColor = true;
         buttonStart.Click += buttonStart_Click;
+        // 
+        // notifyIcon
+        // 
+        notifyIcon.Icon = (Icon)resources.GetObject("notifyIcon.Icon");
+        notifyIcon.Text = "DittoPro";
+        notifyIcon.Visible = true;
+        notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
         // 
         // FormMain
         // 
@@ -50,11 +60,11 @@ partial class FormMain
         ClientSize = new Size(139, 41);
         Controls.Add(buttonStart);
         FormBorderStyle = FormBorderStyle.FixedSingle;
-        Margin = new Padding(2, 2, 2, 2);
+        Margin = new Padding(2);
         MinimizeBox = false;
         Name = "FormMain";
         ShowIcon = false;
-        Text = "Ditto";
+        Text = "DittoPro";
         TopMost = true;
         Load += FormMain_Load;
         ResumeLayout(false);
@@ -63,4 +73,5 @@ partial class FormMain
     #endregion
 
     private Button buttonStart;
+    private NotifyIcon notifyIcon;
 }

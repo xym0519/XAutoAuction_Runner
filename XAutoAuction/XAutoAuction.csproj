@@ -6,8 +6,10 @@
         <Nullable>enable</Nullable>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
-        <AssemblyName>Ditto</AssemblyName>
+        <AssemblyName>DittoPro</AssemblyName>
         <ApplicationIcon>Ditto_128.ico</ApplicationIcon>
+        <Version>1.0.2</Version>
+        <PackageId>DittoPro</PackageId>
     </PropertyGroup>
 
     <ItemGroup>

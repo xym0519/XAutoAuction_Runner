@@ -95,6 +95,8 @@ public partial class FormMain : Form
     private ManualResetEventSlim resetEvent = new ManualResetEventSlim(true);
     private Thread hotkeyThread;
     private int round = 0;
+    private long startTime = 0;
+    private const long AutoStopTime = 600;
 
     private void ToggleStart()
     {
@@ -113,6 +115,21 @@ public partial class FormMain : Form
 
                     while (!cancellationTokenSource.Token.IsCancellationRequested)
                     {
+                        var curTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+                        if (curTime - startTime >= AutoStopTime)
+                        {
+                            // 请求取消当前线程
+                            cancellationTokenSource.Cancel();
+
+                            this.buttonStart.Text = @"Compose";
+                            this.notifyIcon.Text = @"DittoPro";
+                            this.Text = @"DittoPro";
+                            break;
+                        }
+
+                        notifyIcon.Text = @"TimeLeft: " + (AutoStopTime - (curTime - startTime));
+                        this.Text = @"DittoPro " + (AutoStopTime - (curTime - startTime));
+
                         // 获取名为 "LYWOW" 的进程并发送热键
                         Process[] processes = Process.GetProcessesByName("WowClassic");
                         foreach (Process process in processes)
@@ -132,15 +149,15 @@ public partial class FormMain : Form
                                 round++;
                                 if (round >= 180)
                                 {
-                                    Thread.Sleep(200);
-                                    SendKeys.SendWait("w");
-                                    Thread.Sleep(200);
-                                    SendKeys.SendWait("s");
-                                    Thread.Sleep(200);
-                                    SendKeys.SendWait("{F1}");
-                                    Thread.Sleep(200);
+                                    // Thread.Sleep(200);
+                                    // SendKeys.SendWait("w");
+                                    // Thread.Sleep(200);
+                                    // SendKeys.SendWait("s");
+                                    // Thread.Sleep(200);
+                                    // SendKeys.SendWait("{F1}");
+                                    Thread.Sleep(500);
                                     SendKeys.SendWait("2");
-                                    Thread.Sleep(200);
+                                    Thread.Sleep(500);
                                     round = 0;
                                 }
                                 else
@@ -166,7 +183,10 @@ public partial class FormMain : Form
                 }
             });
 
+            // 获取当前 UTC 时间
+            startTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             hotkeyThread.Start();
+            this.buttonStart.Text = @"Stop";
         }
         else
         {
@@ -175,6 +195,10 @@ public partial class FormMain : Form
 
             // 等待线程结束并重新置空
             resetEvent.Wait();
+
+            this.buttonStart.Text = @"Compose";
+            this.notifyIcon.Text = @"DittoPro";
+            this.Text = @"DittoPro";
         }
     }
 
@@ -213,6 +237,18 @@ public partial class FormMain : Form
             resetEvent.Wait();
             cancellationTokenSource.Dispose();
             cancellationTokenSource = null;
+        }
+    }
+
+    private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        if (this.Visible)
+        {
+            HideForm();
+        }
+        else
+        {
+            ShowForm();
         }
     }
 }
