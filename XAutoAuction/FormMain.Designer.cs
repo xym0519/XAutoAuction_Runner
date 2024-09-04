@@ -37,12 +37,11 @@ partial class FormMain
         // 
         // buttonStart
         // 
-        buttonStart.Location = new Point(8, 7);
-        buttonStart.Margin = new Padding(2);
+        buttonStart.Location = new Point(11, 12);
         buttonStart.Name = "buttonStart";
-        buttonStart.Size = new Size(122, 27);
+        buttonStart.Size = new Size(160, 45);
         buttonStart.TabIndex = 0;
-        buttonStart.Text = "Compose";
+        buttonStart.Text = "Comp";
         buttonStart.UseVisualStyleBackColor = true;
         buttonStart.Click += buttonStart_Click;
         // 
@@ -55,12 +54,11 @@ partial class FormMain
         // 
         // FormMain
         // 
-        AutoScaleDimensions = new SizeF(7F, 15F);
+        AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(139, 41);
+        ClientSize = new Size(183, 68);
         Controls.Add(buttonStart);
         FormBorderStyle = FormBorderStyle.FixedSingle;
-        Margin = new Padding(2);
         MinimizeBox = false;
         Name = "FormMain";
         ShowIcon = false;

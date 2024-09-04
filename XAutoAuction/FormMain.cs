@@ -96,7 +96,7 @@ public partial class FormMain : Form
     private Thread hotkeyThread;
     private int round = 0;
     private long startTime = 0;
-    private const long AutoStopTime = 600;
+    private const long AutoStopTime = 900;
 
     private void ToggleStart()
     {
