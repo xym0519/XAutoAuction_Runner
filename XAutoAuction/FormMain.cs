@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace XAutoAuction;
@@ -34,7 +35,7 @@ public partial class FormMain : Form
         // 将修饰键和键码转换为 Windows API 的参数
         if (!RegisterHotKey(this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_E))
         {
-            MessageBox.Show("Failed to register hotkey.");
+            MessageBox.Show(@"Failed to register hotkey.");
         }
     }
 
@@ -44,7 +45,7 @@ public partial class FormMain : Form
         // 取消注册全局热键
         if (!UnregisterHotKey(this.Handle, HOTKEY_ID))
         {
-            MessageBox.Show("Failed to unregister hotkey.");
+            MessageBox.Show(@"Failed to unregister hotkey.");
         }
     }
 
@@ -59,8 +60,6 @@ public partial class FormMain : Form
             ToggleStart();
         }
     }
-
-    private bool isRunning = false;
 
     public FormMain()
     {
@@ -82,8 +81,14 @@ public partial class FormMain : Form
         StopHotkeyThread();
     }
 
+    private string? _fileVersion = "";
+
     private void FormMain_Load(object sender, EventArgs e)
     {
+        var assembly = Assembly.GetExecutingAssembly();
+        var info = FileVersionInfo.GetVersionInfo(assembly.Location);
+        _fileVersion = info.FileVersion;
+        this.Text = @"D" + _fileVersion;
     }
 
     private void buttonStart_Click(object sender, EventArgs e)
@@ -91,80 +96,78 @@ public partial class FormMain : Form
         ToggleStart();
     }
 
-    private CancellationTokenSource? cancellationTokenSource = null;
-    private ManualResetEventSlim resetEvent = new ManualResetEventSlim(true);
-    private Thread hotkeyThread;
-    private int round = 0;
-    private long startTime = 0;
+    private CancellationTokenSource? _cancellationTokenSource;
+    private readonly ManualResetEventSlim _resetEvent = new(true);
+
+    private Thread? _hotkeyThread;
+
+    // private int round = 0;
+    private long _startTime;
     private const long AutoStopTime = 900;
 
     private void ToggleStart()
     {
-        if (cancellationTokenSource == null)
+        if (_cancellationTokenSource == null)
         {
             // 启动新线程
-            cancellationTokenSource = new CancellationTokenSource();
-            resetEvent.Reset(); // 重置 ManualResetEventSlim
+            _cancellationTokenSource = new CancellationTokenSource();
+            _resetEvent.Reset(); // 重置 ManualResetEventSlim
 
-            hotkeyThread = new Thread(() =>
+            _hotkeyThread = new Thread(() =>
             {
                 try
                 {
                     // 隐藏窗口
                     HideForm();
 
-                    while (!cancellationTokenSource.Token.IsCancellationRequested)
+                    while (!_cancellationTokenSource.Token.IsCancellationRequested)
                     {
                         var curTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-                        if (curTime - startTime >= AutoStopTime)
+                        if (curTime - _startTime >= AutoStopTime)
                         {
                             // 请求取消当前线程
-                            cancellationTokenSource.Cancel();
+                            _cancellationTokenSource.Cancel();
 
-                            this.buttonStart.Text = @"Compose";
-                            this.notifyIcon.Text = @"DittoPro";
-                            this.Text = @"DittoPro";
                             break;
                         }
 
-                        notifyIcon.Text = @"TimeLeft: " + (AutoStopTime - (curTime - startTime));
-                        this.Text = @"DittoPro " + (AutoStopTime - (curTime - startTime));
+                        notifyIcon.Text = @"TimeLeft: " + (AutoStopTime - (curTime - _startTime));
+                        this.Text = @"DittoPro " + (AutoStopTime - (curTime - _startTime));
 
                         // 获取名为 "LYWOW" 的进程并发送热键
-                        Process[] processes = Process.GetProcessesByName("WowClassic");
-                        foreach (Process process in processes)
+                        var processes = Process.GetProcessesByName("WowClassic");
+                        foreach (var process in processes)
                         {
                             // 检查是否已请求取消操作
-                            if (cancellationTokenSource.Token.IsCancellationRequested)
+                            if (_cancellationTokenSource.Token.IsCancellationRequested)
                             {
                                 return;
                             }
 
-                            IntPtr mainWindowHandle = process.MainWindowHandle;
-                            if (mainWindowHandle != IntPtr.Zero)
-                            {
-                                SetForegroundWindow(mainWindowHandle);
-                                Thread.Sleep(100);
-                                SendKeys.SendWait("\\");
-                                round++;
-                                if (round >= 180)
-                                {
-                                    // Thread.Sleep(200);
-                                    // SendKeys.SendWait("w");
-                                    // Thread.Sleep(200);
-                                    // SendKeys.SendWait("s");
-                                    // Thread.Sleep(200);
-                                    // SendKeys.SendWait("{F1}");
-                                    Thread.Sleep(500);
-                                    SendKeys.SendWait("2");
-                                    Thread.Sleep(500);
-                                    round = 0;
-                                }
-                                else
-                                {
-                                    Thread.Sleep(1000);
-                                }
-                            }
+                            var mainWindowHandle = process.MainWindowHandle;
+                            if (mainWindowHandle == IntPtr.Zero) continue;
+                            SetForegroundWindow(mainWindowHandle);
+                            Thread.Sleep(100);
+                            SendKeys.SendWait("\\");
+                            // round++;
+                            // if (round >= 180)
+                            // {
+                            // Thread.Sleep(200);
+                            // SendKeys.SendWait("w");
+                            // Thread.Sleep(200);
+                            // SendKeys.SendWait("s");
+                            // Thread.Sleep(200);
+                            // SendKeys.SendWait("{F1}");
+                            // Thread.Sleep(250);
+                            // SendKeys.SendWait("2");
+                            // Thread.Sleep(250);
+                            // round = 0;
+                            // }
+
+                            // else
+                            // {
+                            Thread.Sleep(400);
+                            // }
                         }
                     }
                 }
@@ -177,28 +180,28 @@ public partial class FormMain : Form
                     // 显示窗口
                     ShowForm();
 
-                    resetEvent.Set(); // 设置 ManualResetEventSlim，表示线程已结束
-                    cancellationTokenSource.Dispose();
-                    cancellationTokenSource = null;
+                    _resetEvent.Set(); // 设置 ManualResetEventSlim，表示线程已结束
+                    _cancellationTokenSource.Dispose();
+                    _cancellationTokenSource = null;
                 }
             });
 
             // 获取当前 UTC 时间
-            startTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-            hotkeyThread.Start();
+            _startTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            _hotkeyThread.Start();
             this.buttonStart.Text = @"Stop";
         }
         else
         {
             // 请求取消当前线程
-            cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Cancel();
 
             // 等待线程结束并重新置空
-            resetEvent.Wait();
+            _resetEvent.Wait();
 
             this.buttonStart.Text = @"Compose";
             this.notifyIcon.Text = @"DittoPro";
-            this.Text = @"DittoPro";
+            this.Text = @"D" + _fileVersion;
         }
     }
 
@@ -207,7 +210,7 @@ public partial class FormMain : Form
     {
         if (this.InvokeRequired)
         {
-            this.BeginInvoke((Action)(() => { this.Visible = false; }));
+            this.BeginInvoke(() => { this.Visible = false; });
         }
         else
         {
@@ -220,7 +223,7 @@ public partial class FormMain : Form
     {
         if (this.InvokeRequired)
         {
-            this.BeginInvoke((Action)(() => { this.Visible = true; }));
+            this.BeginInvoke(() => { this.Visible = true; });
         }
         else
         {
@@ -231,13 +234,11 @@ public partial class FormMain : Form
     // 停止热键处理线程
     private void StopHotkeyThread()
     {
-        if (cancellationTokenSource != null)
-        {
-            cancellationTokenSource.Cancel();
-            resetEvent.Wait();
-            cancellationTokenSource.Dispose();
-            cancellationTokenSource = null;
-        }
+        if (_cancellationTokenSource == null) return;
+        _cancellationTokenSource.Cancel();
+        _resetEvent.Wait();
+        _cancellationTokenSource.Dispose();
+        _cancellationTokenSource = null;
     }
 
     private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
