@@ -152,14 +152,18 @@ public partial class FormMain : Form
                             var waitTime = random.Next(90, 110);
                             Thread.Sleep(waitTime);
 
-                            var keys = new[] { 1, 2, 3, 4, 5 };
-                            ShuffleArray(keys);
+                            var key = random.Next(1, 6).ToString();
+                            SendKeys.SendWait(key);
+                            Thread.Sleep(random.Next(300, 500));
 
-                            for (var i = 0; i < 5; i++)
-                            {
-                                SendKeys.SendWait(keys[i].ToString());
-                                Thread.Sleep(random.Next(400, 600));
-                            }
+                            // var keys = new[] { 1, 2, 3, 4, 5 };
+                            // ShuffleArray(keys);
+                            //
+                            // for (var i = 0; i < 5; i++)
+                            // {
+                            //     SendKeys.SendWait(keys[i].ToString());
+                            //     Thread.Sleep(random.Next(400, 600));
+                            // }
                         }
                     }
                 }
