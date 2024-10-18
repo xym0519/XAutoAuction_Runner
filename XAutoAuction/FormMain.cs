@@ -147,27 +147,19 @@ public partial class FormMain : Form
                             var mainWindowHandle = process.MainWindowHandle;
                             if (mainWindowHandle == IntPtr.Zero) continue;
                             SetForegroundWindow(mainWindowHandle);
-                            Thread.Sleep(100);
-                            SendKeys.SendWait("\\");
-                            // round++;
-                            // if (round >= 180)
-                            // {
-                            // Thread.Sleep(200);
-                            // SendKeys.SendWait("w");
-                            // Thread.Sleep(200);
-                            // SendKeys.SendWait("s");
-                            // Thread.Sleep(200);
-                            // SendKeys.SendWait("{F1}");
-                            // Thread.Sleep(250);
-                            // SendKeys.SendWait("2");
-                            // Thread.Sleep(250);
-                            // round = 0;
-                            // }
+                            var random = new Random();
 
-                            // else
-                            // {
-                            Thread.Sleep(400);
-                            // }
+                            var waitTime = random.Next(90, 110);
+                            Thread.Sleep(waitTime);
+
+                            var keys = new[] { 1, 2, 3, 4, 5 };
+                            ShuffleArray(keys);
+
+                            for (var i = 0; i < 5; i++)
+                            {
+                                SendKeys.SendWait(keys[i].ToString());
+                                Thread.Sleep(random.Next(400, 600));
+                            }
                         }
                     }
                 }
@@ -250,6 +242,20 @@ public partial class FormMain : Form
         else
         {
             ShowForm();
+        }
+    }
+
+    private void ShuffleArray(int[] array)
+    {
+        var rng = new Random();
+        var n = array.Length;
+        while (n > 1)
+        {
+            n--;
+            // 从0到n中选择一个随机索引
+            var k = rng.Next(n + 1);
+            // 交换当前元素与选中的随机位置元素
+            (array[k], array[n]) = (array[n], array[k]);
         }
     }
 }
