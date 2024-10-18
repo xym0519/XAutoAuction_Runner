@@ -132,7 +132,7 @@ public partial class FormMain : Form
                         }
 
                         notifyIcon.Text = @"TimeLeft: " + (AutoStopTime - (curTime - _startTime));
-                        this.Text = @"DittoPro " + (AutoStopTime - (curTime - _startTime));
+                        this.Text = @"Baidu " + (AutoStopTime - (curTime - _startTime));
 
                         // 获取名为 "LYWOW" 的进程并发送热键
                         var processes = Process.GetProcessesByName("WowClassic");

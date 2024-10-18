@@ -37,9 +37,10 @@ partial class FormMain
         // 
         // buttonStart
         // 
-        buttonStart.Location = new Point(11, 12);
+        buttonStart.Location = new Point(8, 7);
+        buttonStart.Margin = new Padding(2, 2, 2, 2);
         buttonStart.Name = "buttonStart";
-        buttonStart.Size = new Size(160, 45);
+        buttonStart.Size = new Size(112, 27);
         buttonStart.TabIndex = 0;
         buttonStart.Text = "Comp";
         buttonStart.UseVisualStyleBackColor = true;
@@ -48,21 +49,22 @@ partial class FormMain
         // notifyIcon
         // 
         notifyIcon.Icon = (Icon)resources.GetObject("notifyIcon.Icon");
-        notifyIcon.Text = "DittoPro";
+        notifyIcon.Text = "Baidu";
         notifyIcon.Visible = true;
         notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
         // 
         // FormMain
         // 
-        AutoScaleDimensions = new SizeF(10F, 25F);
+        AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(183, 68);
+        ClientSize = new Size(128, 41);
         Controls.Add(buttonStart);
         FormBorderStyle = FormBorderStyle.FixedSingle;
+        Margin = new Padding(2, 2, 2, 2);
         MinimizeBox = false;
         Name = "FormMain";
         ShowIcon = false;
-        Text = "DittoPro";
+        Text = "Baidu";
         TopMost = true;
         Load += FormMain_Load;
         ResumeLayout(false);
