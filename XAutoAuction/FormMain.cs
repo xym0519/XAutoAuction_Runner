@@ -103,7 +103,7 @@ public partial class FormMain : Form
 
     // private int round = 0;
     private long _startTime;
-    private const long AutoStopTime = 900;
+    private const long AutoStopTime = 600;
 
     private void ToggleStart()
     {
