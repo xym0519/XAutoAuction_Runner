@@ -33,12 +33,13 @@ partial class FormMain
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
         buttonStart = new Button();
         notifyIcon = new NotifyIcon(components);
+        checkBox = new CheckBox();
         SuspendLayout();
         // 
         // buttonStart
         // 
         buttonStart.Location = new Point(8, 7);
-        buttonStart.Margin = new Padding(2, 2, 2, 2);
+        buttonStart.Margin = new Padding(2);
         buttonStart.Name = "buttonStart";
         buttonStart.Size = new Size(112, 27);
         buttonStart.TabIndex = 0;
@@ -53,14 +54,26 @@ partial class FormMain
         notifyIcon.Visible = true;
         notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
         // 
+        // checkBox
+        // 
+        checkBox.AutoSize = true;
+        checkBox.Location = new Point(12, 39);
+        checkBox.Name = "checkBox";
+        checkBox.Size = new Size(59, 19);
+        checkBox.TabIndex = 1;
+        checkBox.Text = "Check";
+        checkBox.UseVisualStyleBackColor = true;
+        checkBox.CheckedChanged += checkBox1_CheckedChanged;
+        // 
         // FormMain
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(128, 41);
+        ClientSize = new Size(128, 64);
+        Controls.Add(checkBox);
         Controls.Add(buttonStart);
         FormBorderStyle = FormBorderStyle.FixedSingle;
-        Margin = new Padding(2, 2, 2, 2);
+        Margin = new Padding(2);
         MinimizeBox = false;
         Name = "FormMain";
         ShowIcon = false;
@@ -68,10 +81,12 @@ partial class FormMain
         TopMost = true;
         Load += FormMain_Load;
         ResumeLayout(false);
+        PerformLayout();
     }
 
     #endregion
 
     private Button buttonStart;
     private NotifyIcon notifyIcon;
+    private CheckBox checkBox;
 }

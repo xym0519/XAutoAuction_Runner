@@ -103,7 +103,8 @@ public partial class FormMain : Form
 
     // private int round = 0;
     private long _startTime;
-    private const long AutoStopTime = 600;
+    private long _last6Time;
+    private const long AutoStopTime = 1200;
 
     private void ToggleStart()
     {
@@ -156,14 +157,12 @@ public partial class FormMain : Form
                             SendKeys.SendWait(key);
                             Thread.Sleep(random.Next(300, 500));
 
-                            // var keys = new[] { 1, 2, 3, 4, 5 };
-                            // ShuffleArray(keys);
-                            //
-                            // for (var i = 0; i < 5; i++)
-                            // {
-                            //     SendKeys.SendWait(keys[i].ToString());
-                            //     Thread.Sleep(random.Next(400, 600));
-                            // }
+
+                            if (!checkBox.Checked) continue;
+                            if (curTime - _last6Time <= 2) continue;
+                            SendKeys.SendWait("\\");
+                            Thread.Sleep(random.Next(50, 100));
+                            _last6Time = curTime;
                         }
                     }
                 }
@@ -261,5 +260,9 @@ public partial class FormMain : Form
             // 交换当前元素与选中的随机位置元素
             (array[k], array[n]) = (array[n], array[k]);
         }
+    }
+
+    private void checkBox1_CheckedChanged(object sender, EventArgs e)
+    {
     }
 }
