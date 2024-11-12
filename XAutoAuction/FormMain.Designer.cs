@@ -34,6 +34,7 @@ partial class FormMain
         buttonStart = new Button();
         notifyIcon = new NotifyIcon(components);
         checkBox = new CheckBox();
+        textBox = new TextBox();
         SuspendLayout();
         // 
         // buttonStart
@@ -41,7 +42,7 @@ partial class FormMain
         buttonStart.Location = new Point(8, 7);
         buttonStart.Margin = new Padding(2);
         buttonStart.Name = "buttonStart";
-        buttonStart.Size = new Size(112, 27);
+        buttonStart.Size = new Size(61, 46);
         buttonStart.TabIndex = 0;
         buttonStart.Text = "Comp";
         buttonStart.UseVisualStyleBackColor = true;
@@ -57,7 +58,7 @@ partial class FormMain
         // checkBox
         // 
         checkBox.AutoSize = true;
-        checkBox.Location = new Point(12, 39);
+        checkBox.Location = new Point(74, 34);
         checkBox.Name = "checkBox";
         checkBox.Size = new Size(59, 19);
         checkBox.TabIndex = 1;
@@ -65,11 +66,20 @@ partial class FormMain
         checkBox.UseVisualStyleBackColor = true;
         checkBox.CheckedChanged += checkBox1_CheckedChanged;
         // 
+        // textBox
+        // 
+        textBox.Location = new Point(74, 7);
+        textBox.Name = "textBox";
+        textBox.Size = new Size(61, 23);
+        textBox.TabIndex = 2;
+        textBox.Text = "1200";
+        // 
         // FormMain
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(128, 64);
+        ClientSize = new Size(147, 64);
+        Controls.Add(textBox);
         Controls.Add(checkBox);
         Controls.Add(buttonStart);
         FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -77,7 +87,7 @@ partial class FormMain
         MinimizeBox = false;
         Name = "FormMain";
         ShowIcon = false;
-        Text = "Baidu";
+        Text = "5";
         TopMost = true;
         Load += FormMain_Load;
         ResumeLayout(false);
@@ -89,4 +99,5 @@ partial class FormMain
     private Button buttonStart;
     private NotifyIcon notifyIcon;
     private CheckBox checkBox;
+    private TextBox textBox;
 }

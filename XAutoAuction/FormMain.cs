@@ -88,7 +88,7 @@ public partial class FormMain : Form
         var assembly = Assembly.GetExecutingAssembly();
         var info = FileVersionInfo.GetVersionInfo(assembly.Location);
         _fileVersion = info.FileVersion;
-        this.Text = @"D" + _fileVersion;
+        this.Text = @"B" + _fileVersion;
     }
 
     private void buttonStart_Click(object sender, EventArgs e)
@@ -104,10 +104,11 @@ public partial class FormMain : Form
     // private int round = 0;
     private long _startTime;
     private long _last6Time;
-    private const long AutoStopTime = 1200;
+    private int _autoStopTime = 1200;
 
     private void ToggleStart()
     {
+        int.TryParse(textBox.Text, out _autoStopTime);
         if (_cancellationTokenSource == null)
         {
             // 启动新线程
@@ -124,7 +125,7 @@ public partial class FormMain : Form
                     while (!_cancellationTokenSource.Token.IsCancellationRequested)
                     {
                         var curTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-                        if (curTime - _startTime >= AutoStopTime)
+                        if (curTime - _startTime >= _autoStopTime)
                         {
                             // 请求取消当前线程
                             _cancellationTokenSource.Cancel();
@@ -132,8 +133,8 @@ public partial class FormMain : Form
                             break;
                         }
 
-                        notifyIcon.Text = @"TimeLeft: " + (AutoStopTime - (curTime - _startTime));
-                        this.Text = @"Baidu " + (AutoStopTime - (curTime - _startTime));
+                        notifyIcon.Text = @"TimeLeft: " + (_autoStopTime - (curTime - _startTime));
+                        this.Text = @"Baidu " + (_autoStopTime - (curTime - _startTime));
 
                         // 获取名为 "LYWOW" 的进程并发送热键
                         var processes = Process.GetProcessesByName("WowClassic");
@@ -159,8 +160,8 @@ public partial class FormMain : Form
 
 
                             if (!checkBox.Checked) continue;
-                            if (curTime - _last6Time <= 2) continue;
-                            SendKeys.SendWait("\\");
+                            if (curTime - _last6Time <= 1) continue;
+                            SendKeys.SendWait("6");
                             Thread.Sleep(random.Next(50, 100));
                             _last6Time = curTime;
                         }
@@ -174,7 +175,9 @@ public partial class FormMain : Form
                 {
                     // 显示窗口
                     ShowForm();
-
+                    this.buttonStart.Text = @"Comp";
+                    this.notifyIcon.Text = @"BaiduNetDisk";
+                    this.Text = @"B" + _fileVersion;
                     _resetEvent.Set(); // 设置 ManualResetEventSlim，表示线程已结束
                     _cancellationTokenSource.Dispose();
                     _cancellationTokenSource = null;
@@ -194,9 +197,9 @@ public partial class FormMain : Form
             // 等待线程结束并重新置空
             _resetEvent.Wait();
 
-            this.buttonStart.Text = @"Compose";
-            this.notifyIcon.Text = @"DittoPro";
-            this.Text = @"D" + _fileVersion;
+            this.buttonStart.Text = @"Comp";
+            this.notifyIcon.Text = @"BaiduNetDisk";
+            this.Text = @"B" + _fileVersion;
         }
     }
 
