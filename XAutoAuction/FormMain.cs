@@ -65,7 +65,7 @@ public partial class FormMain : Form
     {
         InitializeComponent();
         MaximizeBox = false; // 隐藏最大化按钮
-        MinimizeBox = false; // 隐藏最大化按钮
+        MinimizeBox = false; // 隐藏最小化按钮
     }
 
     protected override void OnLoad(EventArgs e)
@@ -88,7 +88,7 @@ public partial class FormMain : Form
         var assembly = Assembly.GetExecutingAssembly();
         var info = FileVersionInfo.GetVersionInfo(assembly.Location);
         _fileVersion = info.FileVersion;
-        this.Text = @"B" + _fileVersion;
+        this.Text = @"D" + _fileVersion;
     }
 
     private void buttonStart_Click(object sender, EventArgs e)
@@ -104,11 +104,11 @@ public partial class FormMain : Form
     // private int round = 0;
     private long _startTime;
     private long _last6Time;
-    private int _autoStopTime = 1200;
+    private long _autoStopTime = 7200;
 
     private void ToggleStart()
     {
-        int.TryParse(textBox.Text, out _autoStopTime);
+        _autoStopTime = int.Parse(textBox.Text) * 60;
         if (_cancellationTokenSource == null)
         {
             // 启动新线程
@@ -175,9 +175,7 @@ public partial class FormMain : Form
                 {
                     // 显示窗口
                     ShowForm();
-                    this.buttonStart.Text = @"Comp";
-                    this.notifyIcon.Text = @"BaiduNetDisk";
-                    this.Text = @"B" + _fileVersion;
+
                     _resetEvent.Set(); // 设置 ManualResetEventSlim，表示线程已结束
                     _cancellationTokenSource.Dispose();
                     _cancellationTokenSource = null;
@@ -198,8 +196,8 @@ public partial class FormMain : Form
             _resetEvent.Wait();
 
             this.buttonStart.Text = @"Comp";
-            this.notifyIcon.Text = @"BaiduNetDisk";
-            this.Text = @"B" + _fileVersion;
+            this.notifyIcon.Text = @"BD";
+            this.Text = @"D" + _fileVersion;
         }
     }
 
@@ -251,21 +249,41 @@ public partial class FormMain : Form
         }
     }
 
-    private void ShuffleArray(int[] array)
-    {
-        var rng = new Random();
-        var n = array.Length;
-        while (n > 1)
-        {
-            n--;
-            // 从0到n中选择一个随机索引
-            var k = rng.Next(n + 1);
-            // 交换当前元素与选中的随机位置元素
-            (array[k], array[n]) = (array[n], array[k]);
-        }
-    }
-
     private void checkBox1_CheckedChanged(object sender, EventArgs e)
     {
+    }
+
+    private void textBox_TextChanged(object sender, EventArgs e)
+    {
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        textBox.Text = @"15";
+        ToggleStart();
+    }
+
+    private void button2_Click(object sender, EventArgs e)
+    {
+        textBox.Text = @"30";
+        ToggleStart();
+    }
+
+    private void button3_Click(object sender, EventArgs e)
+    {
+        textBox.Text = @"60";
+        ToggleStart();
+    }
+
+    private void button4_Click(object sender, EventArgs e)
+    {
+        textBox.Text = @"120";
+        ToggleStart();
+    }
+
+    private void button5_Click(object sender, EventArgs e)
+    {
+        textBox.Text = @"240";
+        ToggleStart();
     }
 }
