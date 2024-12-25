@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Forms.VisualStyles;
 
 namespace XAutoAuction;
 
@@ -12,6 +13,10 @@ public partial class FormMain : Form
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
 
     // Windows API 函数声明
     [DllImport("user32.dll")]
@@ -28,6 +33,19 @@ public partial class FormMain : Form
     private const uint MOD_CONTROL = 0x0002; // Ctrl 键
     private const uint MOD_SHIFT = 0x0004; // Shift 键
     private const uint VK_E = 0x45; // E 键的虚拟键码
+
+    // 消息常量
+    const uint WM_MOUSEMOVE = 0x0200; // 鼠标移动
+    const uint WM_RBUTTONDOWN = 0x0204; // 右键按下
+    const uint WM_RBUTTONUP = 0x0205; // 右键释放
+
+    // 定义鼠标坐标结构
+    [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+        public int x;
+        public int y;
+    }
 
     // 注册全局热键的方法
     private void RegisterGlobalHotKey()
@@ -96,6 +114,32 @@ public partial class FormMain : Form
         ToggleStart();
     }
 
+    private void SendMouseMove(IntPtr hwnd, int x, int y)
+    {
+        // 将鼠标移动消息发送到目标窗口
+        POINT pt = new POINT { x = x, y = y };
+        IntPtr lParam = (IntPtr)((y << 16) | (x & 0xFFFF)); // 转换为 lParam 格式
+        SendMessage(hwnd, WM_MOUSEMOVE, IntPtr.Zero, lParam);
+    }
+
+    // 发送鼠标右键按下消息
+    static void SendMouseRightButtonDown(IntPtr hwnd, int x, int y)
+    {
+        // 将鼠标右键按下消息发送到目标窗口
+        POINT pt = new POINT { x = x, y = y };
+        IntPtr lParam = (IntPtr)((y << 16) | (x & 0xFFFF)); // 转换为 lParam 格式
+        SendMessage(hwnd, WM_RBUTTONDOWN, IntPtr.Zero, lParam);
+    }
+
+    // 发送鼠标右键释放消息
+    static void SendMouseRightButtonUp(IntPtr hwnd, int x, int y)
+    {
+        // 将鼠标右键释放消息发送到目标窗口
+        POINT pt = new POINT { x = x, y = y };
+        IntPtr lParam = (IntPtr)((y << 16) | (x & 0xFFFF)); // 转换为 lParam 格式
+        SendMessage(hwnd, WM_RBUTTONUP, IntPtr.Zero, lParam);
+    }
+
     private CancellationTokenSource? _cancellationTokenSource;
     private readonly ManualResetEventSlim _resetEvent = new(true);
 
@@ -105,6 +149,54 @@ public partial class FormMain : Form
     private long _startTime;
     private long _last6Time;
     private long _autoStopTime = 7200;
+
+    private void mode1(IntPtr mainWindowHandle)
+    {
+        var curTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+        var random = new Random();
+
+        var key = random.Next(1, 6).ToString();
+        SendKeys.SendWait(key);
+        Thread.Sleep(random.Next(300, 500));
+
+        if (!checkBox.Checked) return;
+        if (curTime - _last6Time <= 1) return;
+        SendKeys.SendWait("6");
+        Thread.Sleep(random.Next(50, 100));
+        _last6Time = curTime;
+    }
+
+    private int a = 0;
+    private void mode2(IntPtr mainWindowHandle)
+    {
+        var random = new Random();
+
+        var x1 = int.Parse(textBox11.Text);
+        var y1 = int.Parse(textBox12.Text);
+        var t1 = int.Parse(textBox13.Text);
+
+        var x2 = int.Parse(textBox21.Text);
+        var y2 = int.Parse(textBox22.Text);
+        var t2 = int.Parse(textBox23.Text);
+
+        // t1 = 3;
+        // t2 = 3;
+        // x1 = 1021;
+        // y1 = 518;
+        // x2 = 900;
+        // y2 = 475;
+        SendMouseMove(mainWindowHandle, x1, y1);
+        Thread.Sleep(50);
+        SendMouseRightButtonDown(mainWindowHandle, x1, y1);
+        SendMouseRightButtonUp(mainWindowHandle, x1, y1);
+        Thread.Sleep(t1 * 1000 + random.Next(300, 500));
+
+        SendMouseMove(mainWindowHandle, x2, y2);
+        Thread.Sleep(50);
+        SendMouseRightButtonDown(mainWindowHandle, x2, y2);
+        SendMouseRightButtonUp(mainWindowHandle, x2, y2);
+        Thread.Sleep(t2 * 1000 + random.Next(150, 350));
+    }
 
     private void ToggleStart()
     {
@@ -138,6 +230,7 @@ public partial class FormMain : Form
 
                         // 获取名为 "LYWOW" 的进程并发送热键
                         var processes = Process.GetProcessesByName("WowClassic");
+                        // var processes = Process.GetProcessesByName("Chrome");
                         foreach (var process in processes)
                         {
                             // 检查是否已请求取消操作
@@ -151,19 +244,15 @@ public partial class FormMain : Form
                             SetForegroundWindow(mainWindowHandle);
                             var random = new Random();
 
-                            var waitTime = random.Next(90, 110);
-                            Thread.Sleep(waitTime);
-
-                            var key = random.Next(1, 6).ToString();
-                            SendKeys.SendWait(key);
-                            Thread.Sleep(random.Next(300, 500));
-
-
-                            if (!checkBox.Checked) continue;
-                            if (curTime - _last6Time <= 1) continue;
-                            SendKeys.SendWait("6");
-                            Thread.Sleep(random.Next(50, 100));
-                            _last6Time = curTime;
+                            Thread.Sleep(random.Next(90, 110));
+                            if (radioButton1.Checked)
+                            {
+                                mode1(mainWindowHandle);
+                            }
+                            else
+                            {
+                                mode2(mainWindowHandle);
+                            }
                         }
                     }
                 }
@@ -247,14 +336,6 @@ public partial class FormMain : Form
         {
             ShowForm();
         }
-    }
-
-    private void checkBox1_CheckedChanged(object sender, EventArgs e)
-    {
-    }
-
-    private void textBox_TextChanged(object sender, EventArgs e)
-    {
     }
 
     private void button1_Click(object sender, EventArgs e)
