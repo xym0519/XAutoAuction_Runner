@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Forms.VisualStyles;
 
 namespace XAutoAuction;
 
@@ -167,6 +166,7 @@ public partial class FormMain : Form
     }
 
     private int a = 0;
+
     private void mode2(IntPtr mainWindowHandle)
     {
         var random = new Random();
